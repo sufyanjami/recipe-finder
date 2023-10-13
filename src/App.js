@@ -1,23 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import IngredientInput from "./components/IngredientInput";
+import RecipeList from "./components/RecipeList";
+import "./styles.css";
 
 function App() {
+  const [recipes, setRecipes] = useState([]);
+
+  const fetchRecipes = (ingredients) => {
+    fetch(
+      `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&apiKey=e93b6360dcbf4ffe8780ee69e92a8500`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setRecipes(data);
+      });
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Recipe Finder by Sufyan.</h1>
+      <div className="inputContainer">
+        <IngredientInput onSearch={fetchRecipes} />
+      </div>
+      <br />
+      <div className="recipesContainer">
+        <RecipeList recipes={recipes} />
+      </div>
     </div>
   );
 }
